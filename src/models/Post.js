@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
 const aws = require('aws-sdk');
 const fs = require('fs');
@@ -25,15 +27,16 @@ PostSchema.pre('save', function() {
 
 PostSchema.pre('remove', function() {
   if (process.env.STORAGE_TYPE === 's3') {
-    return s3.deleteObject({
-      Bucket: process.env.BUCKET,
-      Key: this.key,
-    }).promise()
-  } else {
-    return promisify(fs.unlink)(
-      path.resolve(__dirname, "..", "..", "tmp", "uploads", this.key)
-    );
+    return s3
+      .deleteObject({
+        Bucket: process.env.BUCKET,
+        Key: this.key,
+      })
+      .promise();
   }
+  return promisify(fs.unlink)(
+    path.resolve(__dirname, '..', '..', 'tmp', 'uploads', this.key)
+  );
 });
 
-module.exports = mongoose.model("Post", PostSchema);
+module.exports = mongoose.model('Post', PostSchema);

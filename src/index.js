@@ -11,21 +11,23 @@ const app = express();
 /*
 Database Setup
 */
-mongoose.connect(process.env.MONGO_URL, 
-{
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 app.use(
-  '/files', 
+  '/files',
   express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
 );
 
-app.use(require("./routes"));
+app.use(require('./routes'));
+
+require('./controllers/authController')(app);
+require('./controllers/dashboardController')(app);
 
 app.listen(process.env.PORT || 3000);
